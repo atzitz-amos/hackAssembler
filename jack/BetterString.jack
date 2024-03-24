@@ -1,0 +1,96 @@
+
+
+class BetterString {
+    field String string;
+
+    constructor BetterString new(String base) {
+        let string = base;
+        return this;
+    }
+
+    method int count (String sub) {
+        var int i, j, result;
+
+        let i = 0;
+        let j = 0;
+        let result = 0;
+
+        while (i < string.length()) {
+            if (j = sub.length()) {
+                let result = result + 1;
+                let j = 0;
+            }
+            if (sub.charAt(j) = string.charAt(i)) {
+                let j = j + 1;
+            } else {
+                let j = 0;
+            }
+            let i = i + 1;
+        }
+
+        if (j = sub.length()) {let result = result + 1;}
+
+        return result;
+    }
+
+    /** Split a string according to `sep` */
+    method Array splitString(String sep) {
+        return Array.new(1);
+    }
+
+    method String concatString(String other) {
+        var int length1, length2, location;
+        var String result;
+
+        let location = 0;
+        let length1 = string.length();
+        let length2 = other.length();
+
+        let result = String.new(length1 + length2);
+
+        while (length1 > location) {
+            let result = result.appendChar(string.charAt(location));
+            let location = location + 1;
+        }
+        let location = 0;
+        while (length2 > location) {
+            let result = result.appendChar(other.charAt(location));
+            let location = location + 1;
+        }
+        return result;
+    }
+
+    method Array split(BetterString sep) {
+        return splitString(sep.toString());
+    }
+
+    method BetterString concat(BetterString other) {
+        return BetterString.new(concatString(other.toString()));
+    }
+
+    method char charAt(int i) {return string.charAt(i);}
+    method int getLength() {return string.length();}
+
+    method String toString() {return string;}
+
+    /** convert BetterString to char Array. */
+    method Array toCharArray() {
+        var Array array;
+        var int i, length;
+
+        let length = getLength();
+        let array = Array.new(length);
+        let i = 0;
+        while (i < length) {
+            let array[i] = string.charAt(i);
+        }
+
+        return array;
+    }
+
+    /** prints BetterString value to the screen. */
+    method void print() {
+        do Output.printString(string);
+        return;
+    }
+}

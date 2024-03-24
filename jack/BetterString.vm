@@ -1,0 +1,213 @@
+function BetterString.new 0
+push constant 1
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push pointer 0
+return
+function BetterString.count 3
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+push constant 0
+pop local 1
+push constant 0
+pop local 2
+label WHILE_EXP0
+push local 0
+push this 0
+call String.length 1
+lt
+not
+if-goto WHILE_END0
+push local 1
+push argument 1
+call String.length 1
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 2
+push constant 1
+add
+pop local 2
+push constant 0
+pop local 1
+label IF_FALSE0
+push argument 1
+push local 1
+call String.charAt 2
+push this 0
+push local 0
+call String.charAt 2
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 1
+push constant 1
+add
+pop local 1
+goto IF_END1
+label IF_FALSE1
+push constant 0
+pop local 1
+label IF_END1
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push local 1
+push argument 1
+call String.length 1
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push local 2
+push constant 1
+add
+pop local 2
+label IF_FALSE2
+push local 2
+return
+function BetterString.splitString 0
+push argument 0
+pop pointer 0
+push constant 1
+call Array.new 1
+return
+function BetterString.concatString 4
+push argument 0
+pop pointer 0
+push constant 0
+pop local 2
+push this 0
+call String.length 1
+pop local 0
+push argument 1
+call String.length 1
+pop local 1
+push local 0
+push local 1
+add
+call String.new 1
+pop local 3
+label WHILE_EXP0
+push local 0
+push local 2
+gt
+not
+if-goto WHILE_END0
+push local 3
+push this 0
+push local 2
+call String.charAt 2
+call String.appendChar 2
+pop local 3
+push local 2
+push constant 1
+add
+pop local 2
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+pop local 2
+label WHILE_EXP1
+push local 1
+push local 2
+gt
+not
+if-goto WHILE_END1
+push local 3
+push argument 1
+push local 2
+call String.charAt 2
+call String.appendChar 2
+pop local 3
+push local 2
+push constant 1
+add
+pop local 2
+goto WHILE_EXP1
+label WHILE_END1
+push local 3
+return
+function BetterString.split 0
+push argument 0
+pop pointer 0
+push pointer 0
+push argument 1
+call BetterString.toString 1
+call BetterString.splitString 2
+return
+function BetterString.concat 0
+push argument 0
+pop pointer 0
+push pointer 0
+push argument 1
+call BetterString.toString 1
+call BetterString.concatString 2
+call BetterString.new 1
+return
+function BetterString.charAt 0
+push argument 0
+pop pointer 0
+push this 0
+push argument 1
+call String.charAt 2
+return
+function BetterString.getLength 0
+push argument 0
+pop pointer 0
+push this 0
+call String.length 1
+return
+function BetterString.toString 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function BetterString.toCharArray 3
+push argument 0
+pop pointer 0
+push pointer 0
+call BetterString.getLength 1
+pop local 2
+push local 2
+call Array.new 1
+pop local 0
+push constant 0
+pop local 1
+label WHILE_EXP0
+push local 1
+push local 2
+lt
+not
+if-goto WHILE_END0
+push local 1
+push local 0
+add
+push this 0
+push local 1
+call String.charAt 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+return
+function BetterString.print 0
+push argument 0
+pop pointer 0
+push this 0
+call Output.printString 1
+pop temp 0
+push constant 0
+return
