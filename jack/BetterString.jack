@@ -8,7 +8,13 @@ class BetterString {
         return this;
     }
 
-    method int count (String sub) {
+
+    // -----------------------------------------
+    method int count (BetterString sub) {
+        return countString(sub.toString());
+    }
+
+    method int countString (String sub) {
         var int i, j, result;
 
         let i = 0;
@@ -33,11 +39,90 @@ class BetterString {
         return result;
     }
 
-    /** Split a string according to `sep` */
+    /*
+    * Split a string according to `sep`
+    * Returns `BetterString``
+    */
     method Array splitString(String sep) {
-        return Array.new(1);
+        var Array result, indexMap;
+        var int length, i, last;
+
+        let length = countString(sep);
+        let indexMap = findAll(sep);
+        let result = Array.new(length);
+
+        do Output.printString("indexMap value at location 0: ");
+        do Output.printInt(indexMap[0]);
+        do Output.println();
+
+        let i = 0;
+        let last = 0;
+        while (i < length) {
+            let result[i] = substring(last, indexMap[i]);
+
+            let last = indexMap[i] + sep.length();
+            let i = i + 1;
+        }
+
+        do indexMap.dispose();
+
+        return result;
     }
 
+    method Array split(BetterString sep) {
+        return splitString(sep.toString());
+    }
+
+    // -----------------------------------------
+    method String substring(int start, int end) {
+        var int i;
+        var String result;
+
+        let i = start;
+        let result = String.new(end - start);
+
+        while (i < end) {
+            let result = result.appendChar(string.charAt(i));
+            let i = i + 1;
+        }
+
+        return result;
+    }
+    // -----------------------------------------
+    method Array findAll(String sub) {
+        var int i, j, r;
+        var Array result;
+
+        if (sub.length() = 0) {
+            return Array.new(0);
+        }
+
+        let i = 0;
+        let j = 0;
+        let r = 0;
+        let result = Array.new(string.length());
+
+        while (i < string.length()) {
+            if (j = sub.length()) {
+                let result[r] = i - sub.length();
+                let j = 0;
+                let r = r + 1;
+            }
+            if (sub.charAt(j) = string.charAt(i)) {
+                let j = j + 1;
+            } else {
+                let j = 0;
+            }
+            let i = i + 1;
+        }
+
+        if (j = sub.length()) {
+            let result[r] = i - sub.length();
+        }
+
+        return result;
+    }
+    // -----------------------------------------
     method String concatString(String other) {
         var int length1, length2, location;
         var String result;
@@ -57,17 +142,15 @@ class BetterString {
             let result = result.appendChar(other.charAt(location));
             let location = location + 1;
         }
-        return result;
-    }
 
-    method Array split(BetterString sep) {
-        return splitString(sep.toString());
+        return result;
     }
 
     method BetterString concat(BetterString other) {
         return BetterString.new(concatString(other.toString()));
     }
 
+    // -----------------------------------------
     method char charAt(int i) {return string.charAt(i);}
     method int getLength() {return string.length();}
 

@@ -1,0 +1,27 @@
+
+
+class Main {
+    function void main() {
+        var BetterString str, str2, str3;
+        var int a, b;
+        var Array arr;
+
+        let str = BetterString.new("asda");
+
+        let a = 0;
+        let b = str.countString("sd");
+        do Output.printInt(b);
+
+        let arr = str.splitString("sd");
+
+        do Output.printString("-");
+        do Output.println();
+
+        while (a < b+1) {
+            do Output.printString(arr[a]);
+            do Output.println();
+            let a = a + 1;
+        }
+        return;
+    }
+}

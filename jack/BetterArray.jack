@@ -1,0 +1,16 @@
+
+
+class BetterArray {
+    field Array pointer;
+
+    constructor BetterArray new(int originalSize) {
+        let pointer = Memory.alloc(originalSize);
+        return this;
+    }
+
+    method int getElement(int index) {return;}
+    method void setElement(int index, int value) {return;}
+
+    method void append(int value) {return;}
+    method void pop() {return;}
+}
