@@ -19,7 +19,7 @@ class Main {
 
         while (a < b+1) {
             do Output.printString(arr[a]);
-            do Output.println();
+            do Output.println();    
             let a = a + 1;
         }
         return;
