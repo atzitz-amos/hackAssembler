@@ -1,0 +1,32 @@
+
+
+class NodeKey {
+    field char key;
+    field State value;
+    field char second;
+    field int type;
+
+    constructor NodeKey new(char k, char s, State v, int t) {
+        let key = k;
+        let value = v;
+        let second = s;
+        let type = t;
+        return this;
+    }
+
+    method char get_key() {
+        return key;
+    }
+
+    method State get_value() {
+        return value;
+    }
+
+    method int get_type() {
+        return type;
+    }
+
+    method char get_second() {
+        return second;
+    }
+}

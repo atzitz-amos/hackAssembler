@@ -1,7 +1,7 @@
 import os
 import sys
 
-from vm.codewriter import CodeWriter
+from codewriter import CodeWriter
 
 
 class ParseError(ValueError):
@@ -58,46 +58,45 @@ class Parser:
             # raise ParseError(self.currentline, self.filename, "Commands outside of function scope")
             pass
 
-        match cmd:
-            case "push":
-                if len(args) != 2:
-                    raise ParseError(self.currentline, self.filename, "Not enough arguments for push instruction")
-                self.c_push(*args)
-            case "pop":
-                if len(args) != 2:
-                    raise ParseError(self.currentline, self.filename, "Not enough arguments for pop instruction")
-                self.c_pop(*args)
-            case "add" | "sub" | "and" | "or":
-                self.c_arr_binary(self.ops[cmd])
-            case 'neg' | 'not':
-                self.c_arr_unary(self.ops[cmd])
-            case 'eq' | 'gt' | 'lt':
-                self.c_arr_bool(self.ops[cmd])
-            case 'goto':
-                if len(args) != 1:
-                    raise ParseError(self.currentline, self.filename, "Not enough arguments for goto instruction")
-                self.c_goto(args[0])
-            case 'if-goto':
-                if len(args) != 1:
-                    raise ParseError(self.currentline, self.filename, "Not enough arguments for if-goto instruction")
-                self.c_if_goto(args[0])
-            case 'label':
-                if len(args) != 1:
-                    raise ParseError(self.currentline, self.filename, "Not enough arguments for label instruction")
-                self.c_label(args[0])
-            case 'function':
-                if len(args) != 2:
-                    raise ParseError(self.currentline, self.filename, "Not enough arguments for function instruction")
-                self.functions.append(args[0])
-                self.c_function(*args)
-            case 'call':
-                if len(args) != 2:
-                    raise ParseError(self.currentline, self.filename, "Not enough arguments for function instruction")
-                self.c_call(*args)
-            case 'return':
-                self.c_return()
-            case _:
-                raise ParseError(self.currentline, self.filename, "Unknown command")
+        if cmd == "push":
+            if len(args) != 2:
+                raise ParseError(self.currentline, self.filename, "Not enough arguments for push instruction")
+            self.c_push(*args)
+        elif cmd == "pop":
+            if len(args) != 2:
+                raise ParseError(self.currentline, self.filename, "Not enough arguments for pop instruction")
+            self.c_pop(*args)
+        elif cmd in ["add", "sub", "and", "or"]:
+            self.c_arr_binary(self.ops[cmd])
+        elif cmd in ["neg", "not"]:
+            self.c_arr_unary(self.ops[cmd])
+        elif cmd in ["eq", "gt", "lt"]:
+            self.c_arr_bool(self.ops[cmd])
+        elif cmd == "goto":
+            if len(args) != 1:
+                raise ParseError(self.currentline, self.filename, "Not enough arguments for goto instruction")
+            self.c_goto(args[0])
+        elif cmd == "if-goto":
+            if len(args) != 1:
+                raise ParseError(self.currentline, self.filename, "Not enough arguments for if-goto instruction")
+            self.c_if_goto(args[0])
+        elif cmd == "label":
+            if len(args) != 1:
+                raise ParseError(self.currentline, self.filename, "Not enough arguments for label instruction")
+            self.c_label(args[0])
+        elif cmd == "function":
+            if len(args) != 2:
+                raise ParseError(self.currentline, self.filename, "Not enough arguments for function instruction")
+            self.functions.append(args[0])
+            self.c_function(*args)
+        elif cmd == "call":
+            if len(args) != 2:
+                raise ParseError(self.currentline, self.filename, "Not enough arguments for function instruction")
+            self.c_call(*args)
+        elif cmd == "return":
+            self.c_return()
+        else:
+            raise ParseError(self.currentline, self.filename, "Unknown command")
 
     def perform_default_push(self):
         self.cw.write("@SP")
@@ -112,8 +111,7 @@ class Parser:
         self.cw.write("D=M")
 
     def c_push(self, cmd, i):
-        match cmd:
-            case 'local' | 'argument' | 'this' | 'that':
+        if cmd in ['local', 'argument', 'this', 'that']:
                 pointer_reg = self.pointer_ref[cmd]
                 self.cw.write(f"@{i}")
                 self.cw.write("D=A")
@@ -121,15 +119,15 @@ class Parser:
                 self.cw.write("A=D+M")
                 self.cw.write("D=M")
                 self.perform_default_push()
-            case 'constant':
+        elif cmd == 'constant':
                 self.cw.write(f"@{i}")
                 self.cw.write("D=A")
                 self.perform_default_push()
-            case 'static':
+        elif cmd == 'static':
                 self.cw.write(f"@{self.filename}.{i}")
                 self.cw.write("D=M")
                 self.perform_default_push()
-            case 'pointer':
+        elif cmd == 'pointer':
                 if i not in "01":
                     raise ParseError(self.currentline, self.filename,
                                      "Can only use `pointer` segment with values of 0 or 1")
@@ -137,19 +135,18 @@ class Parser:
                 self.cw.write(f"@{pointer_reg}")
                 self.cw.write("D=M")
                 self.perform_default_push()
-            case 'temp':
+        elif cmd == 'temp':
                 if i not in "01234567":
                     raise ParseError(self.currentline, self.filename,
                                      "Can only use `temp` segment with values ranging from 0 to 7")
                 self.cw.write(f"@{'R' + str(int(i) + 5)}")
                 self.cw.write("D=M")
                 self.perform_default_push()
-            case _:
+        else:
                 raise ParseError(self.currentline, self.filename, "Unknown segment for push instruction")
 
     def c_pop(self, cmd, i):
-        match cmd:
-            case 'local' | 'argument' | 'this' | 'that':
+        if cmd in ['local', 'argument', 'this', 'that']:
                 pointer_reg = self.pointer_ref[cmd]
                 self.cw.write(f"@{i}")
                 self.cw.write("D=A")
@@ -161,13 +158,13 @@ class Parser:
                 self.cw.write("@R13")
                 self.cw.write("A=M")
                 self.cw.write("M=D")
-            case 'constant':
+        elif cmd == 'constant':
                 raise ParseError(self.currentline, self.filename, "Were you trying to change a constant?")
-            case 'static':
+        elif cmd == 'static':
                 self.perform_default_pop()
                 self.cw.write(f"@{self.filename}.{i}")
                 self.cw.write("M=D")
-            case 'pointer':
+        elif cmd == 'pointer':
                 if i not in "01":
                     raise ParseError(self.currentline, self.filename,
                                      "Can only use `pointer` segment with values of 0 or 1")
@@ -175,14 +172,14 @@ class Parser:
                 self.perform_default_pop()
                 self.cw.write(f"@{pointer_reg}")
                 self.cw.write(f"M=D")
-            case 'temp':
+        elif cmd == 'temp':
                 if i not in "01234567":
                     raise ParseError(self.currentline, self.filename,
                                      "Can only use `temp` segment with values within 0 and 8")
                 self.perform_default_pop()
                 self.cw.write(f"@{'R' + str(int(i) + 5)}")
                 self.cw.write("M=D")
-            case _:
+        else:
                 raise ParseError(self.currentline, self.filename, "Unknown segment for pop instruction")
 
     def c_arr_binary(self, op):

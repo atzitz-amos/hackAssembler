@@ -1,0 +1,471 @@
+class Tests {
+    function void compareInt(String test, int a, int b) {
+        do Output.printString("[");
+        do Output.printString(test);
+        do Output.printString("] ");
+        if (a = b) {
+            do Output.printString("Test ok!");
+        } else {
+            do Output.printString("Test failed!");
+        }
+        return;
+    }
+
+    function void compareBoolean(String test, boolean a, boolean b) {
+        if (a = b) {
+        } else {
+            do Output.printString("[");
+            do Output.printString(test);
+            do Output.printString("] ");
+            do Output.printString("Test failed!");
+        }
+        return;
+    }
+    
+    function void compareString(String test, String a, String b) {
+        var int i;
+
+        do Output.printString("[");
+        do Output.printString(test);
+        do Output.printString("] ");
+
+        if (BetterString.isSame(a, b)) {
+            do Output.printString("Test ok!");
+        } else {
+            do Output.printString("Test failed!");
+        }
+
+        return;
+    }
+    
+    function void compareStringLists(String test, List a, List b) {
+        var int i;
+
+        do Output.printString("[");
+        do Output.printString(test);
+        do Output.printString("] ");
+
+        if (a.length() = b.length()) {
+            let i = 0;
+            while (i < a.length()) {
+                if (BetterString.isSame(a[i], b[i])) {
+                    let i = i + 1;
+                } else {
+                    do Output.printString("Test failed!");
+                    return;
+                }
+            }
+            do Output.printString("Test ok!");
+        } else {
+            do Output.printString("Test failed!");
+        }
+        return;
+    }
+
+    function void compareLists(String test, List a, List b) {
+        var int i;
+
+        do Output.printString("[");
+        do Output.printString(test);
+        do Output.printString("] ");
+
+        if (a.length() = b.length()) {
+            let i = 0;
+            while (i < a.length()) {
+                if (a[i] = b[i]) {
+                    let i = i + 1;
+                } else {
+                    do Output.printString("Test failed!");
+                    return;
+                }
+            }
+            do Output.printString("Test ok!");
+        } else {
+            do Output.printString("Test failed!");
+        }
+        return;
+    }
+    
+    // -----------------------------------------
+
+    function void runAll() {
+        do Output.printString("Running string tests...");
+        do Output.println();
+        do Output.println();
+
+        do Tests.stringTestCountString();
+        do Tests.stringTestSplitString();
+        do Tests.stringTestSubstring();
+        do Tests.stringTestFindAll();
+        do Tests.stringTestConcatString();
+        do Tests.stringTestToCharArray();
+        do Tests.stringTestPrint();
+        do Tests.stringTestDispose();
+
+        do Output.println();
+        do Output.printString("Press any key to continue...");
+        do Keyboard.readChar();
+
+        do Screen.clearScreen();
+        do Output.moveCursor(0, 0);
+        do Output.printString("Running list tests...");
+        do Output.println();
+        do Output.println();
+
+        do Tests.listTestAdd();
+        do Tests.listTestRemove();
+        do Tests.listTestGet();
+        do Tests.listTestSet();
+        do Tests.listTestLength();
+
+        do Output.println();
+        do Output.printString("Press any key to continue...");
+        do Keyboard.readChar();
+
+        do Screen.clearScreen();
+        do Output.moveCursor(0, 0);
+        do Output.printString("Running regexp tests...");
+        do Output.println();
+        do Output.printString("If no 'Test Failed!' message appears, all tests succeeded");
+        do Output.println();
+        do Output.println();
+
+        do Tests.testComplexRegex1();
+        do Tests.testComplexRegex2();
+        do Tests.testComplexRegex3();
+        do Tests.testComplexRegex4();
+        do Tests.testComplexRegex5();
+        do Tests.testComplexRegex6();
+        do Tests.testComplexRegex7();
+        do Tests.testComplexRegex8();
+        do Tests.testComplexRegex9();
+        do Tests.testComplexRegex10();
+        return;
+    }
+
+    function void stringTestCountString() {
+        var BetterString str;
+        var int count;
+
+        let str = BetterString.new("hello world");
+        let count = str.countString("o");
+        do Tests.compareInt("CountString", count, 2);
+        do Output.println();
+        return;
+    }
+
+    function void stringTestSplitString() {
+        var BetterString str;
+        var List result;
+        var List expected;
+
+        let str = BetterString.new("hello world");
+        let result = str.splitString(" ");
+        let expected = List.new(2);
+        let expected[0] = "hello";
+        let expected[1] = "world";
+        do Tests.compareStringLists("SplitString", result, expected);
+        do Output.println();
+        return;
+    }
+
+    function void stringTestSubstring() {
+        var BetterString str;
+        var String substr;
+
+        let str = BetterString.new("hello world");
+        let substr = str.substring(0, 5);
+        do Tests.compareString("Substring", substr, "hello");
+        do Output.println();
+        return;
+    }
+
+    function void stringTestFindAll() {
+        var BetterString str;
+        var List positions;
+        var List expected;
+
+        let str = BetterString.new("hello world");
+        let positions = str.findAll("o");
+        let expected = List.new(2);
+        let expected[0] = 4;
+        let expected[1] = 7;
+        do Tests.compareLists("FindAll", positions, expected);
+        do Output.println();
+        return;
+    }
+
+    function void stringTestConcatString() {
+        var BetterString str1, str2, result;
+
+        let str1 = BetterString.new("hello");
+        let str2 = BetterString.new(" world");
+        let result = str1.concat(str2);
+        do Tests.compareString("Concat", result.toString(), "hello world");
+        do Output.println();
+        return;
+    }
+
+    function void stringTestToCharArray() {
+        var BetterString str;
+        var List charArray;
+        var List expected;
+
+        let str = BetterString.new("hello");
+        let charArray = str.toCharArray();
+        let expected = List.new(5);
+        let expected[0] = 104;  // h
+        let expected[1] = 101;  // e
+        let expected[2] = 108;  // l
+        let expected[3] = 108;  // l
+        let expected[4] = 111;  // o
+        do Tests.compareLists("ToCharArray", charArray, expected);
+        do Output.println();
+        return;
+    }
+
+    function void stringTestPrint() {
+        var BetterString str;
+
+        let str = BetterString.new("hello world");
+        do Output.printString("Print 'hello world': ");
+        do str.print();
+        do Output.println();
+        return;
+    }
+
+    function void stringTestDispose() {
+        var BetterString str;
+
+        let str = BetterString.new("hello world");
+        do str.dispose();
+        do Output.printString("Disposed 'hello world'");
+        do Output.println();
+        do Output.printString("Test ok!");
+        do Output.println();
+        return;
+    }
+    
+    function void listTestAdd() {
+        var List list;
+        var int length;
+
+        let list = List.new(2);
+        let list[0] = "item1";
+        let list[1] = "item2";
+        let length = list.length();
+        do Tests.compareInt("Add", length, 2);
+        do Output.println();
+        return;
+    }
+
+    function void listTestRemove() {
+        var List list;
+        var String item;
+
+        let list = List.new(2);
+        let list[0] = "item1";
+        let list[1] = "item2";
+        let item = list.pop();
+        do Tests.compareString("Remove", item, "item2");
+        do Output.println();
+        return;
+    }
+
+    function void listTestGet() {
+        var List list;
+        var String item;
+
+        let list = List.new(2);
+        let list[0] = "item1";
+        let list[1] = "item2";
+        let item = list[0];
+        do Tests.compareString("Get", item, "item1");
+        do Output.println();
+        return;
+    }
+
+    function void listTestSet() {
+        var List list;
+        var String item;
+
+        let list = List.new(1);
+        let list[0] = "item1";
+        let list[0] = "newItem";
+        let item = list[0];
+        do Tests.compareString("Set", item, "newItem");
+        do Output.println();
+        return;
+    }
+
+    function void listTestLength() {
+        var List list;
+        var int length;
+
+        let list = List.new(2);
+        let list[0] = "item1";
+        let list[1] = "item2";
+        let length = list.length();
+        do Tests.compareInt("Length", length, 2);
+        do Output.println();
+        return;
+    }
+
+    function void testComplexRegex1() {
+        var Parser parser;
+        var Link link;
+        var Matcher matcher;
+
+        let parser = Parser.new();
+        let link = parser.reg_exp("a|b");
+        let matcher = Matcher.new(link);
+        do Tests.compareBoolean("ComplexRegex1 a", matcher.match("a"), true);
+        do Tests.compareBoolean("ComplexRegex1 b", matcher.match("b"), true);
+        do Tests.compareBoolean("ComplexRegex1 c", matcher.match("c"), false);
+        do Output.println();
+        return;
+    }
+
+    function void testComplexRegex2() {
+        var Parser parser;
+        var Link link;
+        var Matcher matcher;
+
+        let parser = Parser.new();
+        let link = parser.reg_exp("(a|b)c");
+        let matcher = Matcher.new(link);
+        do Tests.compareBoolean("ComplexRegex2 ac", matcher.match("ac"), true);
+        do Tests.compareBoolean("ComplexRegex2 bc", matcher.match("bc"), true);
+        do Tests.compareBoolean("ComplexRegex2 cc", matcher.match("cc"), false);
+        do Output.println();
+        return;
+    }
+
+    function void testComplexRegex3() {
+        var Parser parser;
+        var Link link;
+        var Matcher matcher;
+
+        let parser = Parser.new();
+        let link = parser.reg_exp("[a-c]");
+        let matcher = Matcher.new(link);
+        do Tests.compareBoolean("ComplexRegex3 a", matcher.match("a"), true);
+        do Tests.compareBoolean("ComplexRegex3 b", matcher.match("b"), true);
+        do Tests.compareBoolean("ComplexRegex3 c", matcher.match("c"), true);
+        do Tests.compareBoolean("ComplexRegex3 d", matcher.match("d"), false);
+        do Output.println();
+        return;
+    }
+
+    function void testComplexRegex4() {
+        var Parser parser;
+        var Link link;
+        var Matcher matcher;
+
+        let parser = Parser.new();
+        let link = parser.reg_exp("a+");
+        let matcher = Matcher.new(link);
+        do Tests.compareBoolean("ComplexRegex4 a", matcher.match("a"), true);
+        do Tests.compareBoolean("ComplexRegex4 aa", matcher.match("aa"), true);
+        do Tests.compareBoolean("ComplexRegex4 aaa", matcher.match("aaa"), true);
+        do Tests.compareBoolean("ComplexRegex4 b", matcher.match("b"), false);
+        do Output.println();
+        return;
+    }
+
+    function void testComplexRegex5() {
+        var Parser parser;
+        var Link link;
+        var Matcher matcher;
+
+        let parser = Parser.new();
+        let link = parser.reg_exp("a?");
+        let matcher = Matcher.new(link);
+        do Tests.compareBoolean("ComplexRegex5 empty", matcher.match(""), true);
+        do Tests.compareBoolean("ComplexRegex5 a", matcher.match("a"), true);
+        do Tests.compareBoolean("ComplexRegex5 aa", matcher.match("aa"), false);
+        do Output.println();
+        return;
+    }
+
+    function void testComplexRegex6() {
+        var Parser parser;
+        var Link link;
+        var Matcher matcher;
+
+        let parser = Parser.new();
+        let link = parser.reg_exp("a*");
+        let matcher = Matcher.new(link);
+        do Tests.compareBoolean("ComplexRegex6 empty", matcher.match(""), true);
+        do Tests.compareBoolean("ComplexRegex6 a", matcher.match("a"), true);
+        do Tests.compareBoolean("ComplexRegex6 aa", matcher.match("aa"), true);
+        do Tests.compareBoolean("ComplexRegex6 aaa", matcher.match("aaa"), true);
+        do Tests.compareBoolean("ComplexRegex6 b", matcher.match("b"), false);
+        do Output.println();
+        return;
+    }
+
+    function void testComplexRegex7() {
+        var Parser parser;
+        var Link link;
+        var Matcher matcher;
+
+        let parser = Parser.new();
+        let link = parser.reg_exp("\\.");
+        let matcher = Matcher.new(link);
+        do Tests.compareBoolean("ComplexRegex7 dot", matcher.match("."), true);
+        do Tests.compareBoolean("ComplexRegex7 a", matcher.match("a"), false);
+        do Output.println();
+        return;
+    }
+
+    function void testComplexRegex8() {
+        var Parser parser;
+        var Link link;
+        var Matcher matcher;
+
+        let parser = Parser.new();
+        let link = parser.reg_exp("a.b");
+        let matcher = Matcher.new(link);
+        do Tests.compareBoolean("ComplexRegex8 acb", matcher.match("acb"), true);
+        do Tests.compareBoolean("ComplexRegex8 aab", matcher.match("aab"), true);
+        do Tests.compareBoolean("ComplexRegex8 abb", matcher.match("abb"), true);
+        do Tests.compareBoolean("ComplexRegex8 ab", matcher.match("ab"), false);
+        do Output.println();
+        return;
+    }
+
+    function void testComplexRegex9() {
+        var Parser parser;
+        var Link link;
+        var Matcher matcher;
+
+        let parser = Parser.new();
+        let link = parser.reg_exp("a-c");
+        let matcher = Matcher.new(link);
+        do Tests.compareBoolean("ComplexRegex9 a", matcher.match("a"), true);
+        do Tests.compareBoolean("ComplexRegex9 b", matcher.match("b"), true);
+        do Tests.compareBoolean("ComplexRegex9 c", matcher.match("c"), true);
+        do Tests.compareBoolean("ComplexRegex9 d", matcher.match("d"), false);
+        do Output.println();
+        return;
+    }
+
+    function void testComplexRegex10() {
+        var Parser parser;
+        var Link link;
+        var Matcher matcher;
+
+        let parser = Parser.new();
+        let link = parser.reg_exp("a(b|c)*d");
+        let matcher = Matcher.new(link);
+        do Tests.compareBoolean("ComplexRegex10 ad", matcher.match("ad"), true);
+        do Tests.compareBoolean("ComplexRegex10 abd", matcher.match("abd"), true);
+        do Tests.compareBoolean("ComplexRegex10 abcd", matcher.match("abcd"), true);
+        do Tests.compareBoolean("ComplexRegex10 abcbcd", matcher.match("abcbcd"), true);
+        do Tests.compareBoolean("ComplexRegex10 acbd", matcher.match("acbd"), true);
+        do Tests.compareBoolean("ComplexRegex10 a", matcher.match("a"), false);
+        do Output.println();
+        return;
+    }
+}

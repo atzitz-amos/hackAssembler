@@ -1,0 +1,26 @@
+
+class Node {
+    field int type;
+    field List value;
+    field char second;
+
+    constructor Node new(int t, List v, char x) {
+        let type = t;
+        let value = v;
+        let second = x;
+        return this;
+    }
+
+    method int get_type() {
+        return type;
+    }
+
+    method List get_value() {
+        return value;
+    }
+
+    method char get_second() {
+        return second;
+    }
+
+}

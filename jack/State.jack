@@ -1,0 +1,42 @@
+
+
+class State {
+    field List transitions;
+    field List epsilon;
+    field bool isEnd;
+
+    constructor State new(bool i) {
+        let transitions = List.new(0);
+        let epsilon = List.new(0);
+        let isEnd = i;
+        return this;
+    }
+
+    method void add_transition(NodeKey key) {
+        let transitions = transitions.append(key);
+        return;
+    }
+
+    method void add_epsilon(State state) {
+        let epsilon = epsilon.append(state);
+        return;
+    }
+
+    method void set_isEnd(bool v) {
+        let isEnd = v;
+        return;
+    }
+
+    method bool get_isEnd() {
+        return isEnd;
+    }
+
+    method List get_transitions() {
+        return transitions;
+    }
+
+    method List get_epsilons() {
+        return epsilon;
+    }
+
+}

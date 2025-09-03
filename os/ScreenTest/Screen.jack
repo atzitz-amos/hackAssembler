@@ -1,0 +1,162 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Screen.jack
+
+/**
+ * A library of functions for displaying graphics on the screen.
+ * The Hack physical screen consists of 512 rows (indexed 0..511, top to bottom)
+ * of 256 pixels each (indexed 0..255, left to right). The top left pixel on 
+ * the screen is indexed (0,0).
+ */
+class Screen {
+    static boolean color;
+
+    /** Initializes the Screen. */
+    function void init() {
+        let color = true;
+        return;
+    }
+
+    /** Erases the entire screen. */
+    function void clearScreen() {
+        var int i;
+        while (i < 8192) {
+            do Memory.poke(16384 + i, 0);
+            let i = i + 1;
+        }
+        return;
+    }
+
+    /** Sets the current color, to be used for all subsequent drawXXX commands.
+     *  Black is represented by true, white by false. */
+    function void setColor(boolean b) {
+        let color = b;
+        return;
+    }
+
+    /** Draws the (x,y) pixel, using the current color. */
+    function void drawPixel(int x, int y) {
+        var int address, value, mask;
+        let address = (32 * y) + (x / 16);
+        let value = Memory.peek(address + 16384);
+        let mask = Math.twoToThe(x & 15);
+
+        if (color) {
+            let value = value | mask;
+        } else {
+            let value = value & ~mask;
+        }
+
+        do Memory.poke(address + 16384, value);
+        return;
+    }
+
+    function void drawHLine(int x1, int x2, int y) {
+        var int low, high, z, rest, y32;
+        let y32 = (y * 32) + 16384;
+        if (x1 < x2) {let low = x1; let high = x2;} else {let low = x2; let high = x1;}
+
+        // 0000000000000000000000000
+        // z  L          ^
+        //    |----------| rest
+
+        let z = low / 16;
+        let rest = 16 - (low - (z * 16));
+        if (~(rest = 0)) {
+            if (color) {
+                do Memory.poke(y32 + z, (Memory.peek(y32 + z) | (Math.twoToThe(rest) - 1)));
+            } else {
+                do Memory.poke(y32 + z, (Memory.peek(y32 + z) & ~(Math.twoToThe(rest) - 1)));
+            }
+            let low = low + rest;
+            let z = z + 1;
+        }
+
+        while ((high - low) > 15) {
+            // Optimize for chunk of 16 pixels
+            do Memory.poke(y32 + z, color);
+            let low = low + 16;
+            let z = z + 1;  // Avoid recomputing low / 16 everytime
+        }
+
+        let rest = low - high;
+        while (~(rest > 0)) {
+            do Screen.drawPixel(high + rest, y);
+            let rest = rest + 1;
+        }
+
+        return;
+    }
+
+    /** Draws a line from pixel (x1,y1) to pixel (x2,y2), using the current color. */
+    function void drawLine(int x1, int y1, int x2, int y2) {
+        var int a, b, dx, dy, diff, dirA, dirB, low, high, z;
+
+        let dirA = 1;
+        let dirB = 1;
+        let dx = x2 - x1;
+        let dy = y2 - y1;
+
+        if (x1 = x2) {
+            // Vert
+            if (y1 < y2) {let low = y1; let high = y2;} else {let low = y2; let high = y1;}
+            while (~(low > high)) {
+                do Screen.drawPixel(x1, low);
+                let low = low + 1;
+            }
+            return;
+        }
+        if (y1 = y2) {
+            // Horiz
+            do Screen.drawHLine(x1, x2, y1);
+            return;
+        }
+        if (y2 < y1) {
+            let dy = -dy;
+            let dirB = -1;
+        }
+        if (x2 < x1) {
+            let dx = -dx;
+            let dirA = -1;
+        }
+
+        while ((a < (dx + 1)) & (b < (dy + 1))) {
+            do Screen.drawPixel(x1 + (dirA * a), y1 + (dirB * b));
+            if (diff < 0) {
+                let a = a + 1;
+                let diff = diff + dy;
+            } else {
+                let b = b + 1;
+                let diff = diff - dx;
+            }
+        }
+        return;
+    }
+
+    /** Draws a filled rectangle whose top left corner is (x1, y1)
+     * and bottom right corner is (x2,y2), using the current color. */
+    function void drawRectangle(int x1, int y1, int x2, int y2) {
+        var int y;
+        let y = y1;
+        while (~(y > y2)) {
+            do Screen.drawHLine(x1, x2, y);
+            let y = y + 1;
+        }
+        return;
+    }
+
+    /** Draws a filled circle of radius r<=181 around (x,y), using the current color. */
+    function void drawCircle(int x, int y, int r) {
+        var int dy, w, rsquared;
+        let rsquared = r * r;
+
+        let dy = -r;
+        while(~(dy > r)) {
+            let w = Math.sqrt(rsquared - (dy * dy));
+            do Screen.drawLine(x - w, y + dy, x + w, y + dy);
+            let dy = dy + 1;
+        }
+        return;
+    }
+}

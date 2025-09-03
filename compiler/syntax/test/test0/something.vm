@@ -1,0 +1,32 @@
+function Main.main 1
+push local 0
+pop local 0
+call game.run 0
+pop temp 0
+call game.dispose 0
+pop temp 0
+push constant 0
+return
+function Main.test 4
+push local 0
+not
+if-goto .L0
+push local 0
+pop local 2
+push local 1
+pop local 2
+push local 0
+push local 3
+add
+push local 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+goto .L1
+label .L0
+push local 0
+pop local 0
+label .L1
+push constant 0
+return

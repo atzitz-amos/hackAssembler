@@ -14,74 +14,215 @@ push argument 1
 call BetterString.toString 1
 call BetterString.countString 2
 return
-function BetterString.countString 3
+function BetterString.__kmp_table_update_table 0
+label WHILE_EXP0
+push argument 2
+push constant 0
+lt
+not
+not
+if-goto WHILE_END0
+push argument 0
+push argument 1
+call String.charAt 2
+push argument 0
+push argument 2
+call String.charAt 2
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 2
+return
+label IF_FALSE0
+push argument 2
+push argument 3
+add
+pop pointer 1
+push that 0
+pop argument 2
+goto WHILE_EXP0
+label WHILE_END0
+push argument 2
+return
+function BetterString.countString 6
 push argument 0
 pop pointer 0
 push constant 0
 pop local 0
 push constant 0
 pop local 1
-push constant 0
+push argument 1
+call String.length 1
+push constant 1
+add
+call Array.new 1
+pop local 4
+push constant 1
 pop local 2
+push constant 0
+push local 4
+add
+push constant 1
+neg
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
 label WHILE_EXP0
-push local 0
-push this 0
+push local 2
+push argument 1
 call String.length 1
 lt
 not
 if-goto WHILE_END0
-push local 1
 push argument 1
-call String.length 1
+push local 2
+call String.charAt 2
+push argument 1
+push local 3
+call String.charAt 2
 eq
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
 push local 2
+push local 4
+add
+push local 3
+push local 4
+add
+pop pointer 1
+push that 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+goto IF_END0
+label IF_FALSE0
+push local 2
+push local 4
+add
+push local 3
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push argument 1
+push local 2
+push local 3
+push local 4
+call BetterString.__kmp_table_update_table 4
+pop local 3
+label IF_END0
+push local 2
 push constant 1
 add
 pop local 2
-push constant 0
-pop local 1
-label IF_FALSE0
-push argument 1
+push local 3
+push constant 1
+add
+pop local 3
+goto WHILE_EXP0
+label WHILE_END0
+label WHILE_EXP1
+push local 0
 push local 1
-call String.charAt 2
+add
+push this 0
+call String.length 1
+lt
+not
+if-goto WHILE_END1
+push argument 1
+push local 0
+call BetterString.charAtOf 2
 push this 0
 push local 0
-call String.charAt 2
+push local 1
+add
+call BetterString.charAtOf 2
 eq
 if-goto IF_TRUE1
 goto IF_FALSE1
 label IF_TRUE1
-push local 1
-push constant 1
-add
-pop local 1
-goto IF_END1
-label IF_FALSE1
-push constant 0
-pop local 1
-label IF_END1
 push local 0
-push constant 1
-add
-pop local 0
-goto WHILE_EXP0
-label WHILE_END0
-push local 1
 push argument 1
 call String.length 1
+push constant 1
+sub
 eq
 if-goto IF_TRUE2
 goto IF_FALSE2
 label IF_TRUE2
-push local 2
+push local 5
 push constant 1
 add
-pop local 2
+pop local 5
+push local 1
+push local 0
+add
+push local 0
+push local 4
+add
+pop pointer 1
+push that 0
+sub
+pop local 1
+push local 0
+push local 4
+add
+pop pointer 1
+push that 0
+pop local 0
+goto IF_END2
 label IF_FALSE2
-push local 2
+push local 0
+push constant 1
+add
+pop local 0
+label IF_END2
+goto IF_END1
+label IF_FALSE1
+push local 1
+push local 0
+add
+push local 0
+push local 4
+add
+pop pointer 1
+push that 0
+sub
+pop local 1
+push local 0
+push local 4
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+gt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push local 0
+push local 4
+add
+pop pointer 1
+push that 0
+pop local 0
+goto IF_END3
+label IF_FALSE3
+push constant 0
+pop local 0
+label IF_END3
+label IF_END1
+goto WHILE_EXP1
+label WHILE_END1
+push local 4
+call Array.dispose 1
+pop temp 0
+push local 5
 return
 function BetterString.splitString 5
 push argument 0
@@ -95,81 +236,10 @@ push argument 1
 call BetterString.findAll 2
 pop local 1
 push local 2
-call Array.new 1
-pop local 0
-push constant 30
-call String.new 1
-push constant 105
-call String.appendChar 2
-push constant 110
-call String.appendChar 2
-push constant 100
-call String.appendChar 2
-push constant 101
-call String.appendChar 2
-push constant 120
-call String.appendChar 2
-push constant 77
-call String.appendChar 2
-push constant 97
-call String.appendChar 2
-push constant 112
-call String.appendChar 2
-push constant 32
-call String.appendChar 2
-push constant 118
-call String.appendChar 2
-push constant 97
-call String.appendChar 2
-push constant 108
-call String.appendChar 2
-push constant 117
-call String.appendChar 2
-push constant 101
-call String.appendChar 2
-push constant 32
-call String.appendChar 2
-push constant 97
-call String.appendChar 2
-push constant 116
-call String.appendChar 2
-push constant 32
-call String.appendChar 2
-push constant 108
-call String.appendChar 2
-push constant 111
-call String.appendChar 2
-push constant 99
-call String.appendChar 2
-push constant 97
-call String.appendChar 2
-push constant 116
-call String.appendChar 2
-push constant 105
-call String.appendChar 2
-push constant 111
-call String.appendChar 2
-push constant 110
-call String.appendChar 2
-push constant 32
-call String.appendChar 2
-push constant 48
-call String.appendChar 2
-push constant 58
-call String.appendChar 2
-push constant 32
-call String.appendChar 2
-call Output.printString 1
-pop temp 0
-push constant 0
-push local 1
+push constant 1
 add
-pop pointer 1
-push that 0
-call Output.printInt 1
-pop temp 0
-call Output.println 0
-pop temp 0
+call List.new 1
+pop local 0
 push constant 0
 pop local 3
 push constant 0
@@ -210,8 +280,29 @@ add
 pop local 3
 goto WHILE_EXP0
 label WHILE_END0
+push local 4
+push this 0
+call String.length 1
+gt
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 3
+push local 0
+add
+push pointer 0
+push local 4
+push this 0
+call String.length 1
+call BetterString.substring 3
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+label IF_FALSE0
 push local 1
-call Array.dispose 1
+call List.dispose 1
 pop temp 0
 push local 0
 return
@@ -253,107 +344,195 @@ goto WHILE_EXP0
 label WHILE_END0
 push local 1
 return
-function BetterString.findAll 4
+function BetterString.findAll 6
 push argument 0
 pop pointer 0
-push argument 1
-call String.length 1
 push constant 0
-eq
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
-push constant 0
-call Array.new 1
-return
-label IF_FALSE0
+call List.new 1
+pop local 5
 push constant 0
 pop local 0
 push constant 0
 pop local 1
-push constant 0
-pop local 2
-push this 0
+push argument 1
 call String.length 1
+push constant 1
+add
 call Array.new 1
-pop local 3
+pop local 4
+push constant 1
+pop local 2
+push constant 0
+push local 4
+add
+push constant 1
+neg
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
 label WHILE_EXP0
-push local 0
-push this 0
+push local 2
+push argument 1
 call String.length 1
 lt
 not
 if-goto WHILE_END0
-push local 1
 push argument 1
-call String.length 1
-eq
-if-goto IF_TRUE1
-goto IF_FALSE1
-label IF_TRUE1
 push local 2
-push local 3
-add
-push local 0
+call String.charAt 2
 push argument 1
-call String.length 1
-sub
+push local 3
+call String.charAt 2
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 2
+push local 4
+add
+push local 3
+push local 4
+add
+pop pointer 1
+push that 0
 pop temp 0
 pop pointer 1
 push temp 0
 pop that 0
-push constant 0
-pop local 1
+goto IF_END0
+label IF_FALSE0
+push local 2
+push local 4
+add
+push local 3
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push argument 1
+push local 2
+push local 3
+push local 4
+call BetterString.__kmp_table_update_table 4
+pop local 3
+label IF_END0
 push local 2
 push constant 1
 add
 pop local 2
-label IF_FALSE1
-push argument 1
-push local 1
-call String.charAt 2
-push this 0
-push local 0
-call String.charAt 2
-eq
-if-goto IF_TRUE2
-goto IF_FALSE2
-label IF_TRUE2
-push local 1
+push local 3
 push constant 1
 add
-pop local 1
-goto IF_END2
-label IF_FALSE2
-push constant 0
-pop local 1
-label IF_END2
-push local 0
-push constant 1
-add
-pop local 0
+pop local 3
 goto WHILE_EXP0
 label WHILE_END0
-push local 1
-push argument 1
-call String.length 1
-eq
-if-goto IF_TRUE3
-goto IF_FALSE3
-label IF_TRUE3
 push local 2
-push local 3
+push local 4
 add
-push local 0
-push argument 1
-call String.length 1
-sub
+push local 3
 pop temp 0
 pop pointer 1
 push temp 0
 pop that 0
+label WHILE_EXP1
+push local 0
+push local 1
+add
+push this 0
+call String.length 1
+lt
+not
+if-goto WHILE_END1
+push argument 1
+push local 0
+call BetterString.charAtOf 2
+push this 0
+push local 0
+push local 1
+add
+call BetterString.charAtOf 2
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 0
+push argument 1
+call String.length 1
+push constant 1
+sub
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push local 5
+push local 1
+call List.append 2
+pop local 5
+push local 1
+push local 0
+add
+push local 0
+push local 4
+add
+pop pointer 1
+push that 0
+sub
+pop local 1
+push local 0
+push local 4
+add
+pop pointer 1
+push that 0
+pop local 0
+goto IF_END2
+label IF_FALSE2
+push local 0
+push constant 1
+add
+pop local 0
+label IF_END2
+goto IF_END1
+label IF_FALSE1
+push local 1
+push local 0
+add
+push local 0
+push local 4
+add
+pop pointer 1
+push that 0
+sub
+pop local 1
+push local 0
+push local 4
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+gt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push local 0
+push local 4
+add
+pop pointer 1
+push that 0
+pop local 0
+goto IF_END3
 label IF_FALSE3
-push local 3
+push constant 0
+pop local 0
+label IF_END3
+label IF_END1
+goto WHILE_EXP1
+label WHILE_END1
+push local 4
+call Array.dispose 1
+pop temp 0
+push local 5
 return
 function BetterString.concatString 4
 push argument 0
@@ -425,6 +604,23 @@ push argument 0
 pop pointer 0
 push this 0
 push argument 1
+call BetterString.charAtOf 2
+return
+function BetterString.charAtOf 0
+push argument 1
+push constant 0
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 1
+push argument 0
+call String.length 1
+add
+pop argument 1
+label IF_FALSE0
+push argument 0
+push argument 1
 call String.charAt 2
 return
 function BetterString.getLength 0
@@ -438,6 +634,53 @@ push argument 0
 pop pointer 0
 push this 0
 return
+function BetterString.isSame 1
+push argument 0
+call String.length 1
+push argument 1
+call String.length 1
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push argument 0
+call String.length 1
+lt
+not
+if-goto WHILE_END0
+push argument 0
+push local 0
+call String.charAt 2
+push argument 1
+push local 0
+call String.charAt 2
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 0
+push constant 1
+add
+pop local 0
+goto IF_END1
+label IF_FALSE1
+push constant 0
+return
+label IF_END1
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+not
+return
+goto IF_END0
+label IF_FALSE0
+push constant 0
+return
+label IF_END0
 function BetterString.toCharArray 3
 push argument 0
 pop pointer 0
@@ -445,7 +688,7 @@ push pointer 0
 call BetterString.getLength 1
 pop local 2
 push local 2
-call Array.new 1
+call List.new 1
 pop local 0
 push constant 0
 pop local 1
@@ -465,6 +708,10 @@ pop temp 0
 pop pointer 1
 push temp 0
 pop that 0
+push local 1
+push constant 1
+add
+pop local 1
 goto WHILE_EXP0
 label WHILE_END0
 push local 0
@@ -474,6 +721,14 @@ push argument 0
 pop pointer 0
 push this 0
 call Output.printString 1
+pop temp 0
+push constant 0
+return
+function BetterString.dispose 0
+push argument 0
+pop pointer 0
+push this 0
+call String.dispose 1
 pop temp 0
 push constant 0
 return

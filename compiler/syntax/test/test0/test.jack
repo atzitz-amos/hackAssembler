@@ -1,0 +1,39 @@
+
+class test {
+    field int z;
+    static boolean test;
+
+    function int a(int x) {
+        if (test) {
+            return x + 1;
+        }
+        else {
+            return x - 1 + 2 * 2;
+        }
+    }
+
+    method void main(int p) {
+        var int x, y;
+        let x = 1;
+        do Output.printInt(x);
+        return;
+    }
+
+    constructor test new() {
+        var Array arr;
+        var int i;
+
+        let arr = Array.new(5);
+        let i = 0;
+        while (i < 4) {
+            let arr[i] = i;
+            let i = i + 1;
+        }
+        return this;
+    }
+
+    method void d(Array d) {
+        let d[d[d[d[0]]] + 1] = 1;
+        return;
+    }
+}

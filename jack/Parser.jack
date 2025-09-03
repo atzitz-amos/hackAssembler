@@ -1,0 +1,250 @@
+
+
+class Parser {
+    field int i;
+    field List stack;
+
+    field int GROUP;
+    field int GROUP_OR;
+    field int GROUP_AND;
+    field int RANGE;
+    field int CHAR;
+    field int MOD_STAR;
+    field int MOD_PLUS;
+    field int MOD_QUESTION_MARK;
+    field int DOT;
+
+
+    constructor Parser new() {
+        let i = 0;
+        let stack = List.new(0);
+
+        let GROUP = 0;
+        let GROUP_OR = 1;
+        let GROUP_AND = 2;
+        let RANGE = 3;
+        let CHAR = 4;
+        let MOD_STAR = 5;
+        let MOD_PLUS = 6;
+        let MOD_QUESTION_MARK = 7;
+        let DOT = 8;
+
+        return this;
+    }
+
+    method Node _recursive_parse_pattern(String value) {
+        var List result;
+        var Array arr;
+        var Node nd;
+        var char c;
+        var bool found;
+
+        let result = List.new(0);
+
+        while (i < (value.length())) {
+            let c = value.charAt(i);
+            let found = false;
+            if ((c = 93)) {
+                return result;
+            }
+            if ( (c = 41) | (c = 124)) {  // ) |
+                let nd = Node.new(GROUP_AND, result, 0);
+                return nd;
+            }
+            if (c = 91) {  // [
+                let i = i + 1;
+                let nd = Node.new(GROUP_OR, _recursive_parse_pattern(value), 0);
+                let result = result.append(nd);
+                let found = true;
+            } if (c = 40) {  // (
+                let i = i + 1;
+                let nd = Node.new(GROUP, _parse_pattern(value), 0);
+                let result = result.append(nd);
+                let found = true;
+            } if (c = 92) {  // \
+                let i = i + 1;
+                let nd = Node.new(CHAR, value.charAt(i), 0);
+                let result = result.append(nd);
+                let found = true;
+            } if (c = 46) {  // .
+                let nd = Node.new(DOT, 0, 0);
+                let result = result.append(nd);
+                let found = true;
+            } if (c = 42) {  // *
+                let nd = Node.new(MOD_STAR, result.pop(), 0);
+                let result = result.append(nd);
+                let found = true;
+            } if (c = 43) {  // +
+                let nd = Node.new(MOD_PLUS, result.pop(), 0);
+                let result = result.append(nd);
+                let found = true;
+            } if (c = 63) {  // ?
+                let nd = Node.new(MOD_QUESTION_MARK, result.pop(), 0);
+                let result = result.append(nd);
+                let found = true;
+            } if (c = 45) {  // -
+                let i = i + 1;
+                let nd = result.pop();
+                let nd = Node.new(RANGE, nd.get_value(), value.charAt(i));
+                let result = result.append(nd);
+                let found = true;
+            } if (~found) {  // Basically an else
+                let nd = Node.new(CHAR, c, 0);
+                let result = result.append(nd);
+            }
+            let i = i + 1;
+        }
+
+        let nd = Node.new(GROUP_AND, result, 0);
+        return nd;
+    }
+
+    method Node _parse_pattern(String pattern) {
+        var List result;
+        var Node nd;
+
+        let result = List.new(1);
+        let result[0] = _recursive_parse_pattern(pattern);
+        while (i < (pattern.length())) {
+            if (pattern.charAt(i) = 124) {  // |
+                let i = i + 1;
+                let result = result.append(_recursive_parse_pattern(pattern));
+            } else {
+                let nd = Node.new(GROUP_OR, result, 0);
+                return nd;
+            }
+        }
+        let nd = Node.new(GROUP_OR, result, 0);
+        return nd;
+    }
+
+    method Link build_tree(Node node) {
+        var Link tree;
+        var Array val;
+        var int i;
+
+        var int type;
+
+        let type = node.get_type();
+        let val = node.get_value();
+
+        if (type = GROUP) {
+            return build_tree(val);
+        } if (type = GROUP_OR) {
+            let tree = build_tree(val[0]);
+            let i = 1;
+            while (i < val[-1]) {  // val is actually of type List, so accessing the -1th element gives us actually the length
+                let tree = union(tree, build_tree(val[i]));
+                let i = i + 1;
+            }
+            return tree;
+        } if (type = GROUP_AND) {
+            let tree = build_tree(val[0]);
+            let i = 1;
+            while (i < val[-1]) {  // val is actually of type List, so accessing the -1th element gives us actually the length
+                let tree = concat(tree, build_tree(val[i]));
+                let i = i + 1;
+            }
+            return tree;
+        } if (type = RANGE) {
+            return from_range(node.get_value(), node.get_second());
+        } if (type = CHAR) {
+            return from_symbol(node.get_value());
+        } if (type = MOD_STAR) {
+            return closure(build_tree(node.get_value()));
+        } if (type = MOD_PLUS) {
+            let tree = build_tree(node.get_value());
+            return concat(tree, closure(tree));
+        } if (type = MOD_QUESTION_MARK) {
+            return union(from_epsilon(), build_tree(node.get_value()));
+        } else {
+            return from_symbol(-1);
+        }
+    }
+
+    method Link from_symbol(char symbol) {
+        var State start, end;
+        var NodeKey ndkey;
+
+        let start = State.new(false);
+        let end = State.new(true);
+
+        let ndkey = NodeKey.new(symbol, null, end, 0);
+        do start.add_transition(ndkey);
+        return Link.new(start, end);
+    }
+
+    method Link from_range(char a, char b) {
+        var State start, end;
+        var NodeKey ndkey;
+
+        let start = State.new(false);
+        let end = State.new(true);
+
+        let ndkey = NodeKey.new(a, b, end, 1);
+        do start.add_transition(ndkey);
+        return Link.new(start, end);
+    }
+
+    method Link from_epsilon() {
+        var State start, end;
+
+        let start = State.new(false);
+        let end = State.new(true);
+
+        do start.add_epsilon(end);
+
+        return Link.new(start, end);
+    }
+
+    method Link union(Link a, Link b) {
+        var State start, end;
+        var State aEnd, bEnd;
+
+        let start = State.new(false);
+        do start.add_epsilon(a.get_start());
+        do start.add_epsilon(b.get_start());
+        let end = State.new(true);
+
+        let aEnd = a.get_end();
+        let bEnd = b.get_end();
+
+        do aEnd.add_epsilon(end);
+        do bEnd.add_epsilon(end);
+        do aEnd.set_isEnd(false);
+        do bEnd.set_isEnd(false);
+        return Link.new(start, end);
+    }
+
+    method Link concat(Link a, Link b) {
+        var State aEnd, bEnd;
+
+        let aEnd = a.get_end();
+        let bEnd = b.get_end();
+
+        do aEnd.add_epsilon(b.get_start());
+        do aEnd.set_isEnd(false);
+        return Link.new(a.get_start(), bEnd);
+    }
+
+    method Link closure(Link a) {
+        var State start, end;
+        var State aEnd;
+
+        let start = State.new(false);
+        let end = State.new(true);
+
+        let aEnd = a.get_end();
+
+        do start.add_epsilon(a.get_start());
+        do start.add_epsilon(end);
+        do aEnd.add_epsilon(a.get_start());
+        do aEnd.add_epsilon(end);
+        do aEnd.set_isEnd(false);
+        return Link.new(start, end);
+    }
+
+    method Link reg_exp(String pattern) {
+        return build_tree(_parse_pattern(pattern));
+    }
+}

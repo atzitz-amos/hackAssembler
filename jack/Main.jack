@@ -2,26 +2,201 @@
 
 class Main {
     function void main() {
-        var BetterString str, str2, str3;
-        var int a, b;
-        var Array arr;
+        // User-Based test
+        do Main.userTests();
 
-        let str = BetterString.new("asda");
+        // Automated Tests
+        // do Tests.runAll();
 
-        let a = 0;
-        let b = str.countString("sd");
-        do Output.printInt(b);
+        return;
+    }
 
-        let arr = str.splitString("sd");
-
-        do Output.printString("-");
+    function void userTests() {
+        do Output.printString("String test:");
+        do Output.println();
         do Output.println();
 
-        while (a < b+1) {
-            do Output.printString(arr[a]);
-            do Output.println();    
-            let a = a + 1;
+        do Main.stringTest();
+
+        do Output.println();
+        do Output.println();
+        do Output.printString("Press any key to continue...");
+        do Keyboard.readChar();
+
+        do Screen.clearScreen();
+        do Output.moveCursor(0, 0);
+        do Output.printString("Array test:");
+        do Output.println();
+        do Output.println();
+
+        do Main.arrTest();
+
+        do Output.println();
+        do Output.println();
+        do Output.printString("Press any key to continue...");
+        do Keyboard.readChar();
+
+        do Screen.clearScreen();
+        do Output.moveCursor(0, 0);
+        do Output.printString("Regex test:");
+        do Output.println();
+        do Output.println();
+
+        do Main.regexTest();
+        return;
+    }
+
+    function void regexTest() {
+        var Parser parser;
+        var Node nd;
+        var Matcher matcher;
+        var String regex, in;
+
+        let regex = Keyboard.readLine("Enter a regex: ");
+
+        let parser = Parser.new();
+        let nd = parser.reg_exp(regex);
+
+        let matcher = Matcher.new(nd);
+
+        let in = Keyboard.readLine("Enter a string: ");
+
+        if (matcher.match(in)) {
+            do Output.printString("Matched!");
+        } else {
+            do Output.printString("Not matched!");
         }
+        do Output.println();
+
+
+        let in = Keyboard.readLine("Enter a string: ");
+
+        if (matcher.match(in)) {
+            do Output.printString("Matched!");
+        } else {
+            do Output.printString("Not matched!");
+        }
+        do Output.println();
+
+        let in = Keyboard.readLine("Enter a string: ");
+
+        if (matcher.match(in)) {
+            do Output.printString("Matched!");
+        } else {
+            do Output.printString("Not matched!");
+        }
+        do Output.println();
+
+        return;
+    }
+
+    function void stringTest() {
+        var BetterString str, str2, str3, el;
+        var String in1, in2, in3;
+        var int a, b, length;
+        var List arr, arr2;
+
+        let in1 = Keyboard.readLine("Enter a string: ");
+        let in2 = Keyboard.readLine("Enter search string: ");
+
+        let str = BetterString.new(in1);
+
+        let length = str.countString(in2);
+        let arr = str.findAll(in2);
+
+        do Output.printString("Found ");
+        do Output.printInt(length);
+        do Output.printString(" instances of ");
+        do Output.printString(in2);
+        do Output.printString(", at: ");
+
+        do arr.print();
+
+        do Output.println();
+        do Output.println();
+
+        let in3 = Keyboard.readLine("Enter a split string: ");
+        let arr2 = str.splitString(in3);
+
+        do Output.printString("Result: ");
+
+        do arr2.printStringArray();
+
+        return;
+    }
+
+    function void arrTest() {
+        var List arr;
+        var Array primitiveArr;
+        var int el;
+
+        let arr = List.new(5);
+        let arr[0] = 1;
+        let arr[1] = 2;
+        let arr[2] = 3;
+        let arr[3] = 4;
+        let arr[4] = 5;
+
+        do Output.printString("Array: ");
+        do arr.print();
+        do Output.printString(", of length: ");
+        do Output.printInt(arr.length());
+
+        do Output.println();
+        do Output.println();
+        do Output.printString("Adding 6 and 7");
+        do Output.println();
+        do Output.println();
+
+        let arr = arr.append(6);  // Should resize
+        let arr = arr.append(7);
+
+        do Output.printString("Array: ");
+        do arr.print();
+        do Output.printString(", of length: ");
+        do Output.printInt(arr.length());
+
+        do Output.println();
+        do Output.println();
+        do Output.printString("Popping last element");
+        do Output.println();
+        do Output.println();
+
+        let el = arr.pop();
+        do Output.printString("Popped: ");
+        do Output.printInt(el);
+        do Output.println();
+        do Output.println();
+
+        do Output.printString("Array: ");
+        do arr.print();
+        do Output.printString(", of length: ");
+        do Output.printInt(arr.length());
+        do Output.println();
+        do Output.println();
+
+        // Because of the nature of Lists, this works just fine:
+        let primitiveArr = arr;
+
+        do Output.printString("Array[0]=");
+        do Output.printInt(primitiveArr[0]);
+        do Output.println();
+        do Output.printString("Array[1]=");
+        do Output.printInt(arr[1]);  // Works interchangeably
+        do Output.println();
+        do Output.printString("Array[2]=");
+        do Output.printInt(primitiveArr[2]);
+        do Output.println();
+        do Output.printString("Array[3]=");
+        do Output.printInt(primitiveArr[3]);
+        do Output.println();
+        do Output.printString("Array[4]=");
+        do Output.printInt(primitiveArr[4]);
+        do Output.println();
+        do Output.printString("Array[5]=");
+        do Output.printInt(primitiveArr[5]);
+        do Output.println();
+
         return;
     }
 }

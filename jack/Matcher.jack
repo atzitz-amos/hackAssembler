@@ -1,0 +1,56 @@
+
+
+class Matcher {
+    field Link link;
+    constructor Matcher new(Link tree) {
+        let link = tree;
+        return this;
+    }
+
+    method boolean backtrack(State state, int index, String string) {
+        var int i;
+        var List transitions, epsilons;
+        var NodeKey temp;
+
+        if (state.get_isEnd()) {
+            return (index = string.length());
+        }
+
+        let transitions = state.get_transitions();
+        let epsilons = state.get_epsilons();
+
+        while (i < transitions.length()) {
+            let temp = transitions[i];
+            let i = i + 1;
+            if (~(index < string.length())) {
+                return false;
+            }
+            if (temp.get_type() = 0) {
+                if (~(temp.get_key() = -1) & ~(temp.get_key() = string.charAt(index))) {
+                    return false;
+                }
+            }
+            else {  // Range
+                if ((string.charAt(index) < temp.get_key()) | (string.charAt(index) > temp.get_second())) {
+                    return false;
+                }
+            }
+            if (backtrack(temp.get_value(), index + 1, string)) {
+                return true;
+            }
+        }
+
+        let i = 0;
+        while (i < epsilons.length()) {
+            if (backtrack(epsilons[i], index, string)) {
+                return true;
+            }
+            let i = i + 1;
+        }
+        return false;
+    }
+
+    method boolean match(String s) {
+        return backtrack(link.get_start(), 0, s);
+    }
+}

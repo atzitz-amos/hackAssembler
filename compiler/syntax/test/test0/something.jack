@@ -1,13 +1,15 @@
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
-// File name: projects/10/Square/Main.jack
+// File name: projects/10/ExpressionLessSquare/Main.jack
 
 // Derived from projects/09/Square/Main.jack.
 // This class is functionally the same as the original Main.class.
 // But, some changes were made, in order to test the parsing capability
 // of the syntax analyzer developed in project 10.
 // The changes are documented in the ////comments below.
+
+/** Expressionless version of projects/10/Square/Main.jack. */
 
 /** Initializes a new Square Dance game and starts running it. */
 class Main {
@@ -18,7 +20,7 @@ class Main {
 
    function void main() {
       var SquareGame game;
-      let game = SquareGame.new();
+      let game = game;
       do game.run();
       do game.dispose();
       return;
@@ -31,15 +33,13 @@ class Main {
       var int i, j;
       var String s;
       var Array a;
-      if (false) {
-         let s = "string constant";
-         let s = null;
-         let a[1] = a[2];
+      if (i) {
+         let s = i;
+         let s = j;
+         let a[i] = j;
       }
       else {
-         let i = i * (-j);
-         let j = j / (-2);
-         let i = i | j;
+         let i = i;
       }
       return;
    }

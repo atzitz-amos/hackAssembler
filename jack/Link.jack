@@ -1,0 +1,20 @@
+
+
+class Link {
+    field State start;
+    field State end;
+
+    constructor Link new(State a, State b) {
+        let start = a;
+        let end = b;
+        return this;
+    }
+
+    method State get_start() {
+        return start;
+    }
+
+    method State get_end() {
+        return end;
+    }
+}

@@ -1,17 +1,22 @@
 import os
 import sys
 
-from compiler.syntax.CompileEngine import CompileEngine
-from compiler.syntax.Tokenizer import Tokenizer
+from CompileEngine import CompileEngine
+from Tokenizer import Tokenizer
+from VMWriter import VMWriter
 
 
 def analyze(path, name):
     with open(os.path.join(path, name), "r") as reader:
         tokenizer = Tokenizer(reader.read())
-        output_file = input_file_name_without_extension + ".xml"
+        output_file = input_file_name_without_extension + ".vm"
         with open(os.path.join(path, output_file), "w") as writer:
-            compile_engine = CompileEngine(tokenizer, writer)
+            vmwriter = VMWriter(writer)
+
+            compile_engine = CompileEngine(tokenizer, vmwriter)
             compile_engine.compile_class()
+
+            vmwriter.close()
 
 
 if __name__ == "__main__":
